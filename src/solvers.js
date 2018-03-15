@@ -13,10 +13,51 @@
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
 
+// window.findSolutions = function(n, row = 0, col = 0) { // , row = 0
+//   var board = new Board({n: n});
+  
+//   board.togglePiece(row, col);
+//   for(var i=0)
+//   board.toggle(1, 1);
+//   // place piece in next open (use togglePiece)
+//   for (var )
+//   // Check if conflict
+//       // No? Move to next row
+//       // Yes? Pick up piece, place it on next row
+//       // IF YES && ON LAST COLUMN: pick up that piece and the second to last piece you placed
+// findSolutions(n, i+1, i+1)
+// }
 
 
-window.findNRooksSolution = function(n) {
+window.findNRooksSolution = function(n, board, row = 0, col = 0) {
   var solution = undefined; //fixme
+  // create board
+  var board = board || new Board({n: n});
+  while(!solution)
+    if(board.get(row).includes(1)) {
+      var index = board.get(row).indexOf(1)
+      board.togglePiece(row,index) // untoggling
+      board.togglePiece(row,index+1)
+    } else {
+      board.togglePiece(row,col)
+    }
+    if (board.hasAnyRooksConflicts) { // case of a conflict
+      board.togglePiece(row,col);
+      if (col = n){
+        row -= 1;
+        findNRooksSolution(n,board,row,col)
+      } else {
+          col += 1
+          findNRooksSolution(n,board,row,col)
+        }
+    
+    }
+  // place piece in next open (use togglePiece)
+  
+  // Check if conflict
+      // No? Move to next row
+      // Yes? Pick up piece, place it on next row
+      // IF YES && ON LAST COLUMN: pick up that piece and the second to last piece you placed
 
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return solution;
