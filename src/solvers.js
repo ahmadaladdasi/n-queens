@@ -32,8 +32,10 @@
 window.findNRooksSolution = function(n, board, row = 0, col = 0) {
   var solution = undefined; //fixme
   // create board
-  var board = board || new Board({n: n});
-  while(!solution)
+  if (n < 2) return [[1]];
+  var board = board || new Board({"n": n});
+  while(!solution) {
+    // console.log(board)
     if(board.get(row).includes(1)) {
       var index = board.get(row).indexOf(1)
       board.togglePiece(row,index) // untoggling
@@ -41,17 +43,25 @@ window.findNRooksSolution = function(n, board, row = 0, col = 0) {
     } else {
       board.togglePiece(row,col)
     }
-    if (board.hasAnyRooksConflicts) { // case of a conflict
+    if (board.hasAnyRooksConflicts()) { // case of a conflict
       board.togglePiece(row,col);
-      if (col = n){
+      if (col === n-1){
         row -= 1;
         findNRooksSolution(n,board,row,col)
       } else {
           col += 1
           findNRooksSolution(n,board,row,col)
         }
-    
-    }
+    } else {
+        if (row === n-1){
+          solution = true;
+        } else {
+            row += 1;
+            findNRooksSolution(n,board, row, 0)
+          }
+        
+      }
+  }
   // place piece in next open (use togglePiece)
   
   // Check if conflict
@@ -59,8 +69,8 @@ window.findNRooksSolution = function(n, board, row = 0, col = 0) {
       // Yes? Pick up piece, place it on next row
       // IF YES && ON LAST COLUMN: pick up that piece and the second to last piece you placed
 
-  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
-  return solution;
+  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(board.rows()));
+  return board.rows();
 };
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
